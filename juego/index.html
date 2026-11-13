@@ -2,7 +2,7 @@
 <html lang="es">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, viewport-fit=cover">
 		<title>MINESIM</title>
 		<style>
 html, body, #canvas {
@@ -101,6 +101,21 @@ body {
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
 
+	<script>
+		window.__toques=[];
+		(function(){
+		  function reg(e){
+		    var a=[],w=window.innerWidth||1,hh=window.innerHeight||1;
+		    for(var i=0;i<e.touches.length;i++){a.push([e.touches[i].clientX/w,e.touches[i].clientY/hh]);}
+		    window.__toques=a;
+		  }
+		  ['touchstart','touchmove','touchend','touchcancel'].forEach(function(n){
+		    window.addEventListener(n,reg,{capture:true,passive:true});
+		  });
+		  window.addEventListener('blur',function(){window.__toques=[];});
+		  document.addEventListener('visibilitychange',function(){window.__toques=[];});
+		})();
+		</script>
 	</head>
 	<body>
 		<div id="inicio-aviso">
@@ -143,7 +158,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":187440,"index.wasm":43699190},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":190256,"index.wasm":43699190},"focusCanvas":true,"gdextensionLibs":[]};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
