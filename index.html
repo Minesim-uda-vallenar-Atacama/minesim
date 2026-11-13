@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050505">
+<meta name="theme-color" content="#040912">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icono-192.png">
 <link rel="apple-touch-icon" href="icono-192.png">
@@ -13,94 +13,183 @@
 <title>MINESIM</title>
 <style>
   :root{
-    --bg:#050505; --card:#0c0c0c; --borde:#262626; --texto:#f2f2f2; --tenue:#a8a8a8; --oro:#e6a826;
+    --fondo:#040912; --azul:#2f9bff; --azul2:#1166d9; --texto:#f2f5fa; --tenue:#9fb0c7;
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--texto);
-    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-  main{max-width:520px;margin:0 auto;padding:16px 16px calc(24px + env(safe-area-inset-bottom))}
-  .marco{background:#0a0a0a;border:1px solid var(--borde);border-radius:22px;padding:14px}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--fondo);color:var(--texto);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
 
-  /* Portada: galeria dibujada con CSS (reemplazable por una imagen propia en .portada) */
-  .portada{position:relative;height:min(52vh,340px);border-radius:16px;overflow:hidden;
-    background:
-      radial-gradient(ellipse 14% 20% at 50% 62%, #f3d28a 0%, rgba(243,210,138,.35) 40%, transparent 100%),
-      radial-gradient(ellipse 60% 70% at 50% 62%, #0b0907 0 30%, transparent 31%),
-      repeating-radial-gradient(ellipse 100% 120% at 50% 62%, #1b1611 0 14px, #070605 14px 40px);
-  }
-  .portada::before{ /* vetas doradas en la roca */
-    content:"";position:absolute;inset:0;
-    background:
-      repeating-radial-gradient(ellipse 100% 120% at 50% 62%, transparent 0 46px, rgba(230,168,38,.55) 47px 50px, transparent 51px 92px);
-    -webkit-mask:radial-gradient(ellipse 80% 80% at 50% 62%, transparent 18%, #000 40%, #000 100%);
-            mask:radial-gradient(ellipse 80% 80% at 50% 62%, transparent 18%, #000 40%, #000 100%);
-    filter:blur(.6px) drop-shadow(0 0 6px rgba(230,168,38,.6));
-  }
-  .portada::after{ /* haz de luz y suelo */
-    content:"";position:absolute;inset:0;
-    background:
-      linear-gradient(115deg, transparent 20%, rgba(255,235,190,.16) 30%, transparent 46%),
-      linear-gradient(to top, rgba(230,200,140,.18), transparent 28%);
-  }
-  .portada.con-imagen{background-size:cover;background-position:center}
-  .portada.con-imagen::before,.portada.con-imagen::after{display:none}
+  /* En pantallas anchas el mismo fondo se ve desenfocado a los lados */
+  body::before{content:"";position:fixed;inset:0;z-index:-1;
+    background:url(fondo.jpg) center top/cover no-repeat;filter:blur(18px) brightness(.28) saturate(1.1);transform:scale(1.08)}
 
-  h1{margin:18px 0 4px;text-align:center;font-size:1.7rem;letter-spacing:.04em}
-  .sub{margin:0 0 16px;text-align:center;color:var(--tenue);font-size:.9rem}
+  .app{position:relative;max-width:560px;margin:0 auto;min-height:100vh;min-height:100dvh;overflow:hidden;
+    background:var(--fondo);box-shadow:0 0 60px rgba(0,0,0,.7)}
+  .hero{position:absolute;left:0;right:0;top:0;height:0;padding-top:57.9%;
+    background:
+      linear-gradient(to bottom, rgba(4,9,18,0) 0%, rgba(4,9,18,0) 52%, rgba(4,9,18,.7) 82%, var(--fondo) 100%),
+      url(fondo.jpg) center top/100% 100% no-repeat}
+  /* franjas azules de las esquinas */
+  .franja{position:absolute;pointer-events:none;width:46%;height:120px;
+    background:linear-gradient(115deg, rgba(47,155,255,.95), rgba(17,102,217,.55) 45%, transparent 46%);
+    filter:drop-shadow(0 0 10px rgba(47,155,255,.7))}
+  .franja.a{left:0;top:0;clip-path:polygon(0 0, 34% 0, 0 78%)}
+  .franja.b{right:0;bottom:0;transform:rotate(180deg);clip-path:polygon(0 0, 34% 0, 0 78%)}
 
-  .opcion{display:flex;gap:14px;align-items:center;width:100%;text-align:left;margin-top:10px;
-    background:var(--card);color:inherit;border:1px solid var(--borde);border-radius:14px;
-    padding:14px 16px;font:inherit;cursor:pointer;min-height:68px;transition:border-color .15s,background .15s}
-  .opcion:hover,.opcion:focus-visible{border-color:var(--oro);background:#121008;outline:none}
-  .opcion svg{flex:none;width:26px;height:26px;stroke:var(--texto);fill:none;stroke-width:1.8;
-    stroke-linecap:round;stroke-linejoin:round}
-  .opcion b{display:block;font-size:1rem;font-weight:600}
-  .opcion span{display:block;margin-top:2px;color:var(--tenue);font-size:.85rem}
+  main{position:relative;z-index:1;padding:calc(min(100vw,560px) * .47) 20px calc(26px + env(safe-area-inset-bottom))}
+
+  .logo{display:block;width:min(100%,430px);margin:0 auto;filter:drop-shadow(0 6px 14px rgba(0,0,0,.65))}
+  .sub{display:flex;align-items:center;gap:12px;margin:2px auto 26px;max-width:480px;
+    color:#dfe8f5;font-size:.78rem;letter-spacing:.34em;text-transform:uppercase;white-space:nowrap}
+  .sub::before,.sub::after{content:"";flex:1;height:1.5px;background:linear-gradient(90deg,transparent,var(--azul))}
+  .sub::after{transform:scaleX(-1)}
+  .sub span{flex:none}
+
+  .opcion{display:flex;align-items:center;gap:0;width:100%;text-align:left;margin:0 0 16px;color:inherit;font:inherit;
+    cursor:pointer;min-height:92px;padding:0 18px 0 0;border-radius:26px;position:relative;
+    border:1.5px solid rgba(70,160,255,.6);
+    background:linear-gradient(135deg, rgba(30,90,185,.50), rgba(9,22,48,.80) 55%, rgba(8,18,40,.86));
+    box-shadow:0 0 22px rgba(47,155,255,.34), inset 0 0 20px rgba(80,170,255,.14), 0 10px 24px rgba(0,0,0,.45);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    transition:transform .12s, box-shadow .2s, border-color .2s}
+  .opcion::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:linear-gradient(180deg, rgba(255,255,255,.10), transparent 38%)}
+  .opcion:hover,.opcion:focus-visible{border-color:#7cc0ff;outline:none;
+    box-shadow:0 0 32px rgba(47,155,255,.6), inset 0 0 24px rgba(80,170,255,.22), 0 10px 24px rgba(0,0,0,.45)}
+  .opcion:active{transform:scale(.985)}
+  .ico{flex:none;width:96px;align-self:stretch;display:flex;align-items:center;justify-content:center;
+    border-right:1.5px solid rgba(70,160,255,.55);margin:18px 0}
+  .ico svg{width:54px;height:54px;overflow:visible}
+  .txt{flex:1;padding:0 12px 0 20px}
+  .txt b{display:block;font-size:1.22rem;font-weight:700;line-height:1.18;color:#fff}
+  .txt span{display:block;margin-top:6px;color:var(--tenue);font-size:.86rem;line-height:1.3}
+  .flecha{flex:none;width:28px;height:28px;stroke:var(--azul);fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;
+    filter:drop-shadow(0 0 6px rgba(47,155,255,.9))}
+  @media (prefers-reduced-motion:no-preference){
+    .opcion{animation:brillo 4.5s ease-in-out infinite}
+    @keyframes brillo{0%,100%{box-shadow:0 0 20px rgba(47,155,255,.28), inset 0 0 20px rgba(80,170,255,.12), 0 10px 24px rgba(0,0,0,.45)}
+      50%{box-shadow:0 0 30px rgba(47,155,255,.5), inset 0 0 22px rgba(80,170,255,.2), 0 10px 24px rgba(0,0,0,.45)}}
+  }
+
+  .pie{display:flex;align-items:center;gap:14px;margin:26px 0 10px;color:var(--azul)}
+  .pie::before,.pie::after{content:"";flex:1;height:1.5px;background:linear-gradient(90deg,transparent,rgba(47,155,255,.75))}
+  .pie::after{transform:scaleX(-1)}
+  .pie svg{width:40px;height:40px;stroke:var(--azul);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;
+    filter:drop-shadow(0 0 6px rgba(47,155,255,.8))}
+  .lema{margin:0;text-align:center;color:#aab6c8;font-style:italic;font-size:1.02rem}
+  .aviso{margin:16px 0 0;text-align:center;color:#62738c;font-size:.74rem}
 
   /* Panel para elegir modo */
-  .velo{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:flex-end;justify-content:center;z-index:5}
+  .velo{position:fixed;inset:0;background:rgba(2,6,14,.78);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+    display:none;align-items:flex-end;justify-content:center;z-index:5}
   .velo.abierto{display:flex}
-  .panel{width:100%;max-width:520px;background:#0e0e0e;border:1px solid var(--borde);
-    border-radius:22px 22px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom))}
-  .panel h2{margin:0 0 4px;font-size:1.15rem}
-  .panel p{margin:0 0 6px;color:var(--tenue);font-size:.9rem}
-  .cerrar{margin-top:14px;width:100%;background:none;border:0;color:var(--tenue);font:inherit;padding:10px;cursor:pointer}
-  .aviso{margin-top:14px;text-align:center;color:#6f6f6f;font-size:.75rem}
+  .panel{width:100%;max-width:560px;background:linear-gradient(180deg,#0b1a33,#060d1c);
+    border:1.5px solid rgba(70,160,255,.55);border-bottom:0;border-radius:26px 26px 0 0;
+    padding:22px 18px calc(20px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(47,155,255,.28)}
+  .panel h2{margin:0 0 4px;font-size:1.25rem}
+  .panel p{margin:0 0 16px;color:var(--tenue);font-size:.92rem}
+  .panel .opcion{min-height:78px;padding:0 18px 0 6px;margin-bottom:12px}
+  .panel .txt{padding-left:16px}
+  .cerrar{margin-top:6px;width:100%;background:none;border:0;color:var(--tenue);font:inherit;padding:10px;cursor:pointer}
+
+  @media (max-height:520px) and (orientation:landscape){
+    .opcion{min-height:78px;margin-bottom:12px}
+  }
 </style>
 </head>
 <body>
-<main>
-  <div class="marco">
-    <!-- Para usar una imagen propia: agregar la clase "con-imagen" y style="background-image:url(img/portada.jpg)" -->
-    <div class="portada" role="img" aria-label="Galería subterránea iluminada"></div>
-    <h1>MINESIM</h1>
-    <p class="sub">Simulador interactivo de minería</p>
+<div class="app">
+  <div class="hero" role="img" aria-label="Casco minero con lámpara frente a una galería subterránea"></div>
+  <div class="franja a"></div>
+  <div class="franja b"></div>
+
+  <main>
+    <svg class="logo" viewBox="0 0 760 330" role="img" aria-label="MINESIM">
+      <defs>
+        <linearGradient id="plata" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#cfd6e0"/><stop offset="1" stop-color="#7d8794"/>
+        </linearGradient>
+        <linearGradient id="plata2" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#dfe4ec"/><stop offset="1" stop-color="#8e98a6"/>
+        </linearGradient>
+        <linearGradient id="azul" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#6cc0ff"/><stop offset=".55" stop-color="#1f86f0"/><stop offset="1" stop-color="#0b4fb8"/>
+        </linearGradient>
+        <linearGradient id="azulmt" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#7fd0ff"/><stop offset="1" stop-color="#1166d9"/>
+        </linearGradient>
+      </defs>
+      <!-- montañas -->
+      <polygon points="150,168 262,92 300,120 330,158 262,150 220,130" fill="url(#azulmt)" opacity=".95"/>
+      <polygon points="500,158 540,118 590,92 700,168 628,152 560,150" fill="url(#azulmt)" opacity=".95"/>
+      <polygon points="232,172 380,6 530,172 478,154 446,176 410,118 392,166 360,128 336,178 300,150 262,166" fill="url(#plata)"/>
+      <polygon points="380,6 410,118 392,166 360,128 336,178 380,6" fill="#aeb8c6" opacity=".55"/>
+      <polygon points="380,6 440,84 420,92 446,176 478,154 530,172" fill="#1f86f0" opacity=".45"/>
+      <polyline points="392,60 372,104 396,112 366,160" fill="none" stroke="#5fb4ff" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+      <!-- palabra -->
+      <text x="380" y="300" text-anchor="middle" textLength="716" lengthAdjust="spacingAndGlyphs"
+            font-family="'Arial Black','Helvetica Neue',Arial,sans-serif" font-weight="900" font-style="italic" font-size="150">
+        <tspan fill="url(#plata)">MINE</tspan><tspan fill="url(#azul)">SIM</tspan>
+      </text>
+    </svg>
+    <div class="sub"><span>Simulador interactivo de minería</span></div>
 
     <button class="opcion" data-destino="ar" data-titulo="Realidad aumentada">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"/></svg>
-      <div><b>Explorar maqueta con cámara</b><span>Realidad aumentada · Modo libre o misiones</span></div>
+      <div class="ico">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M6 22V10a4 4 0 0 1 4-4h12M42 6h12a4 4 0 0 1 4 4v12M58 42v12a4 4 0 0 1-4 4H42M22 58H10a4 4 0 0 1-4-4V42"
+                fill="none" stroke="#2f9bff" stroke-width="4" stroke-linecap="round" style="filter:drop-shadow(0 0 5px rgba(47,155,255,.9))"/>
+          <path d="M18 24h6l3-5h10l3 5h6a3 3 0 0 1 3 3v17a3 3 0 0 1-3 3H18a3 3 0 0 1-3-3V27a3 3 0 0 1 3-3z" fill="#eef2f8"/>
+          <circle cx="32" cy="35" r="8" fill="#0b2a55"/><circle cx="32" cy="35" r="5" fill="none" stroke="#2f9bff" stroke-width="2.4"/>
+        </svg>
+      </div>
+      <div class="txt"><b>Explorar maqueta con cámara</b><span>Realidad aumentada · Modo libre o misiones</span></div>
+      <svg class="flecha" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8"/></svg>
     </button>
 
     <button class="opcion" data-destino="juego" data-titulo="Videojuego 3D">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="10" rx="5"/><path d="M8 10v4M6 12h4M15.5 11h.01M17.5 13h.01"/></svg>
-      <div><b>Entrar al videojuego</b><span>Mina virtual 3D · Modo libre o misiones</span></div>
+      <div class="ico">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M18 18h28c7 0 11 6 13 16l2 12c1 6-5 9-9 5l-7-8H19l-7 8c-4 4-10 1-9-5l2-12c2-10 6-16 13-16z"
+                fill="none" stroke="#eef2f8" stroke-width="3.4" stroke-linejoin="round"/>
+          <path d="M19 28v10M14 33h10" stroke="#eef2f8" stroke-width="3.6" stroke-linecap="round"/>
+          <circle cx="43" cy="29" r="2.6" fill="#eef2f8"/><circle cx="49" cy="34" r="2.6" fill="#eef2f8"/>
+          <circle cx="37" cy="34" r="2.6" fill="#eef2f8"/><circle cx="43" cy="39" r="2.6" fill="#eef2f8"/>
+        </svg>
+      </div>
+      <div class="txt"><b>Entrar al videojuego</b><span>Mina virtual 3D · Modo libre o misiones</span></div>
+      <svg class="flecha" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8"/></svg>
     </button>
-  </div>
-  <p class="aviso">Para la realidad aumentada se necesita permitir el acceso a la cámara.</p>
-</main>
+
+    <div class="pie">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <path d="M9 41L33 14M39 41L15 14"/>
+        <path d="M20 12C28 5 40 8 45 19M28 12C20 5 8 8 3 19"/>
+      </svg>
+    </div>
+    <p class="lema">Aprende, explora y vive la minería</p>
+    <p class="aviso">Para la realidad aumentada se necesita permitir el acceso a la cámara.</p>
+  </main>
+</div>
 
 <div class="velo" id="velo">
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="ptitulo">
     <h2 id="ptitulo"></h2>
     <p>Elige cómo quieres comenzar.</p>
-    <button class="opcion" data-modo="misiones"><div><b>Misiones</b><span>Actividades guiadas con instrucciones y retroalimentación</span></div></button>
-    <button class="opcion" data-modo="libre"><div><b>Modo libre</b><span>Explora a tu ritmo y consulta la información</span></div></button>
+    <button class="opcion" data-modo="misiones">
+      <div class="txt"><b>Misiones</b><span>Actividades guiadas con instrucciones y retroalimentación</span></div>
+      <svg class="flecha" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8"/></svg>
+    </button>
+    <button class="opcion" data-modo="libre">
+      <div class="txt"><b>Modo libre</b><span>Explora a tu ritmo y consulta la información</span></div>
+      <svg class="flecha" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8"/></svg>
+    </button>
     <button class="cerrar" id="cerrar">Volver</button>
   </div>
 </div>
 
 <script>
-  // Rutas de cada experiencia dentro del mismo sitio (se crean en los siguientes pasos)
+  // Rutas de cada experiencia dentro del mismo sitio
   var RUTAS = { ar: "ar/index.html", juego: "juego/index.html" };
   var velo = document.getElementById("velo"), destino = null;
 
