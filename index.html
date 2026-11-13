@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050505">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icono-192.png">
+<link rel="apple-touch-icon" href="icono-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MINESIM">
+<title>MINESIM</title>
+<style>
+  :root{
+    --bg:#050505; --card:#0c0c0c; --borde:#262626; --texto:#f2f2f2; --tenue:#a8a8a8; --oro:#e6a826;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--texto);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  main{max-width:520px;margin:0 auto;padding:16px 16px calc(24px + env(safe-area-inset-bottom))}
+  .marco{background:#0a0a0a;border:1px solid var(--borde);border-radius:22px;padding:14px}
+
+  /* Portada: galeria dibujada con CSS (reemplazable por una imagen propia en .portada) */
+  .portada{position:relative;height:min(52vh,340px);border-radius:16px;overflow:hidden;
+    background:
+      radial-gradient(ellipse 14% 20% at 50% 62%, #f3d28a 0%, rgba(243,210,138,.35) 40%, transparent 100%),
+      radial-gradient(ellipse 60% 70% at 50% 62%, #0b0907 0 30%, transparent 31%),
+      repeating-radial-gradient(ellipse 100% 120% at 50% 62%, #1b1611 0 14px, #070605 14px 40px);
+  }
+  .portada::before{ /* vetas doradas en la roca */
+    content:"";position:absolute;inset:0;
+    background:
+      repeating-radial-gradient(ellipse 100% 120% at 50% 62%, transparent 0 46px, rgba(230,168,38,.55) 47px 50px, transparent 51px 92px);
+    -webkit-mask:radial-gradient(ellipse 80% 80% at 50% 62%, transparent 18%, #000 40%, #000 100%);
+            mask:radial-gradient(ellipse 80% 80% at 50% 62%, transparent 18%, #000 40%, #000 100%);
+    filter:blur(.6px) drop-shadow(0 0 6px rgba(230,168,38,.6));
+  }
+  .portada::after{ /* haz de luz y suelo */
+    content:"";position:absolute;inset:0;
+    background:
+      linear-gradient(115deg, transparent 20%, rgba(255,235,190,.16) 30%, transparent 46%),
+      linear-gradient(to top, rgba(230,200,140,.18), transparent 28%);
+  }
+  .portada.con-imagen{background-size:cover;background-position:center}
+  .portada.con-imagen::before,.portada.con-imagen::after{display:none}
+
+  h1{margin:18px 0 4px;text-align:center;font-size:1.7rem;letter-spacing:.04em}
+  .sub{margin:0 0 16px;text-align:center;color:var(--tenue);font-size:.9rem}
+
+  .opcion{display:flex;gap:14px;align-items:center;width:100%;text-align:left;margin-top:10px;
+    background:var(--card);color:inherit;border:1px solid var(--borde);border-radius:14px;
+    padding:14px 16px;font:inherit;cursor:pointer;min-height:68px;transition:border-color .15s,background .15s}
+  .opcion:hover,.opcion:focus-visible{border-color:var(--oro);background:#121008;outline:none}
+  .opcion svg{flex:none;width:26px;height:26px;stroke:var(--texto);fill:none;stroke-width:1.8;
+    stroke-linecap:round;stroke-linejoin:round}
+  .opcion b{display:block;font-size:1rem;font-weight:600}
+  .opcion span{display:block;margin-top:2px;color:var(--tenue);font-size:.85rem}
+
+  /* Panel para elegir modo */
+  .velo{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:flex-end;justify-content:center;z-index:5}
+  .velo.abierto{display:flex}
+  .panel{width:100%;max-width:520px;background:#0e0e0e;border:1px solid var(--borde);
+    border-radius:22px 22px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom))}
+  .panel h2{margin:0 0 4px;font-size:1.15rem}
+  .panel p{margin:0 0 6px;color:var(--tenue);font-size:.9rem}
+  .cerrar{margin-top:14px;width:100%;background:none;border:0;color:var(--tenue);font:inherit;padding:10px;cursor:pointer}
+  .aviso{margin-top:14px;text-align:center;color:#6f6f6f;font-size:.75rem}
+</style>
+</head>
+<body>
+<main>
+  <div class="marco">
+    <!-- Para usar una imagen propia: agregar la clase "con-imagen" y style="background-image:url(img/portada.jpg)" -->
+    <div class="portada" role="img" aria-label="Galería subterránea iluminada"></div>
+    <h1>MINESIM</h1>
+    <p class="sub">Simulador interactivo de minería</p>
+
+    <button class="opcion" data-destino="ar" data-titulo="Realidad aumentada">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"/></svg>
+      <div><b>Explorar maqueta con cámara</b><span>Realidad aumentada · Modo libre o misiones</span></div>
+    </button>
+
+    <button class="opcion" data-destino="juego" data-titulo="Videojuego 3D">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="10" rx="5"/><path d="M8 10v4M6 12h4M15.5 11h.01M17.5 13h.01"/></svg>
+      <div><b>Entrar al videojuego</b><span>Mina virtual 3D · Modo libre o misiones</span></div>
+    </button>
+  </div>
+  <p class="aviso">Para la realidad aumentada se necesita permitir el acceso a la cámara.</p>
+</main>
+
+<div class="velo" id="velo">
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="ptitulo">
+    <h2 id="ptitulo"></h2>
+    <p>Elige cómo quieres comenzar.</p>
+    <button class="opcion" data-modo="misiones"><div><b>Misiones</b><span>Actividades guiadas con instrucciones y retroalimentación</span></div></button>
+    <button class="opcion" data-modo="libre"><div><b>Modo libre</b><span>Explora a tu ritmo y consulta la información</span></div></button>
+    <button class="cerrar" id="cerrar">Volver</button>
+  </div>
+</div>
+
+<script>
+  // Rutas de cada experiencia dentro del mismo sitio (se crean en los siguientes pasos)
+  var RUTAS = { ar: "ar/index.html", juego: "juego/index.html" };
+  var velo = document.getElementById("velo"), destino = null;
+
+  document.querySelectorAll("[data-destino]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      destino = b.dataset.destino;
+      document.getElementById("ptitulo").textContent = b.dataset.titulo;
+      velo.classList.add("abierto");
+    });
+  });
+  document.querySelectorAll("[data-modo]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      window.location.href = RUTAS[destino] + "?modo=" + b.dataset.modo;
+    });
+  });
+  document.getElementById("cerrar").addEventListener("click", function () { velo.classList.remove("abierto"); });
+  velo.addEventListener("click", function (e) { if (e.target === velo) velo.classList.remove("abierto"); });
+</script>
+</body>
+</html>
