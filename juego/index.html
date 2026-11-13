@@ -137,7 +137,8 @@ html,body,#canvas{touch-action:none;-webkit-touch-callout:none;-webkit-user-sele
 		(function(){
 		  var av=document.getElementById('inicio-aviso');
 		  var tactil=(window.matchMedia&&matchMedia('(pointer:coarse)').matches)||('ontouchstart' in window);
-		  if(!tactil) return;
+		  var enMarco=false; try{enMarco=(window.parent!==window);}catch(e){}
+  if(!tactil||enMarco) return;
 		  av.classList.add('activo');
 		  var ios=/iP(hone|ad|od)/.test(navigator.userAgent);
 		  if(ios){document.getElementById('inicio-txt').textContent='En iPhone no se puede forzar la pantalla completa. Para verlo así: Compartir, Agregar a inicio y abre MINESIM desde el ícono.';document.getElementById('inicio-si').style.display='none';}
@@ -166,7 +167,7 @@ html,body,#canvas{touch-action:none;-webkit-touch-callout:none;-webkit-user-sele
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":192592,"index.wasm":43699190},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":197840,"index.wasm":43699190},"focusCanvas":true,"gdextensionLibs":[]};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 

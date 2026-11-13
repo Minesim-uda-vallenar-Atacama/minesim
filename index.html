@@ -24,23 +24,27 @@
     background:url(fondo.jpg) center top/cover no-repeat;filter:blur(18px) brightness(.28) saturate(1.1);transform:scale(1.08)}
 
   .app{position:relative;max-width:560px;margin:0 auto;min-height:100vh;min-height:100dvh;overflow:hidden;
-    background:var(--fondo);box-shadow:0 0 60px rgba(0,0,0,.7)}
-  .hero{position:absolute;left:0;right:0;top:0;height:0;padding-top:57.9%;
+    display:flex;flex-direction:column;background:var(--fondo);box-shadow:0 0 60px rgba(0,0,0,.7)}
+  .hero{position:absolute;left:0;right:0;top:0;height:min(64vh,640px);height:min(64dvh,640px);
     background:
-      linear-gradient(to bottom, rgba(4,9,18,0) 0%, rgba(4,9,18,0) 52%, rgba(4,9,18,.7) 82%, var(--fondo) 100%),
-      url(fondo.jpg) center top/100% 100% no-repeat}
+      linear-gradient(to bottom, rgba(4,9,18,0) 0%, rgba(4,9,18,0) 48%, rgba(4,9,18,.72) 80%, var(--fondo) 100%),
+      url(fondo.jpg) 20% top/cover no-repeat}
   /* franjas azules de las esquinas */
+  .gdg{position:absolute;z-index:3;top:calc(14px + env(safe-area-inset-top));right:16px;
+    font-weight:800;font-size:1.05rem;letter-spacing:.22em;color:#f2f6fc;padding:6px 6px 6px 12px;
+    text-shadow:0 0 10px rgba(47,155,255,.9), 0 2px 6px rgba(0,0,0,.8)}
   .franja{position:absolute;pointer-events:none;width:46%;height:120px;
     background:linear-gradient(115deg, rgba(47,155,255,.95), rgba(17,102,217,.55) 45%, transparent 46%);
     filter:drop-shadow(0 0 10px rgba(47,155,255,.7))}
   .franja.a{left:0;top:0;clip-path:polygon(0 0, 34% 0, 0 78%)}
   .franja.b{right:0;bottom:0;transform:rotate(180deg);clip-path:polygon(0 0, 34% 0, 0 78%)}
 
-  main{position:relative;z-index:1;padding:calc(min(100vw,560px) * .47) 20px calc(26px + env(safe-area-inset-bottom))}
+  main{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:calc(18px + env(safe-area-inset-top)) 20px calc(18px + env(safe-area-inset-bottom))}
+  .izq,.der{display:block}
 
-  .logo{display:block;width:min(100%,430px);margin:0 auto;filter:drop-shadow(0 6px 14px rgba(0,0,0,.65))}
-  .sub{display:flex;align-items:center;gap:12px;margin:2px auto 26px;max-width:480px;
-    color:#dfe8f5;font-size:.78rem;letter-spacing:.34em;text-transform:uppercase;white-space:nowrap}
+  .logo{display:block;width:min(100%,430px,56vh);margin:0 auto;filter:drop-shadow(0 6px 14px rgba(0,0,0,.65))}
+  .sub{display:flex;align-items:center;gap:12px;margin:2px auto clamp(14px,3.2vh,26px);max-width:480px;
+    color:#dfe8f5;font-size:clamp(.56rem,2.5vw,.78rem);letter-spacing:.24em;text-transform:uppercase;white-space:nowrap}
   .sub::before,.sub::after{content:"";flex:1;height:1.5px;background:linear-gradient(90deg,transparent,var(--azul))}
   .sub::after{transform:scaleX(-1)}
   .sub span{flex:none}
@@ -71,13 +75,13 @@
       50%{box-shadow:0 0 30px rgba(47,155,255,.5), inset 0 0 22px rgba(80,170,255,.2), 0 10px 24px rgba(0,0,0,.45)}}
   }
 
-  .pie{display:flex;align-items:center;gap:14px;margin:26px 0 10px;color:var(--azul)}
+  .pie{display:flex;align-items:center;gap:14px;margin:clamp(8px,2.2vh,22px) 0 8px;color:var(--azul)}
   .pie::before,.pie::after{content:"";flex:1;height:1.5px;background:linear-gradient(90deg,transparent,rgba(47,155,255,.75))}
   .pie::after{transform:scaleX(-1)}
   .pie svg{width:40px;height:40px;stroke:var(--azul);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;
     filter:drop-shadow(0 0 6px rgba(47,155,255,.8))}
   .lema{margin:0;text-align:center;color:#aab6c8;font-style:italic;font-size:1.02rem}
-  .aviso{margin:16px 0 0;text-align:center;color:#62738c;font-size:.74rem}
+  .aviso{margin:10px 0 0;text-align:center;color:#62738c;font-size:.74rem}
 
   /* Panel para elegir modo */
   .velo{position:fixed;inset:0;background:rgba(2,6,14,.78);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
@@ -92,18 +96,44 @@
   .panel .txt{padding-left:16px}
   .cerrar{margin-top:6px;width:100%;background:none;border:0;color:var(--tenue);font:inherit;padding:10px;cursor:pointer}
 
-  @media (max-height:520px) and (orientation:landscape){
-    .opcion{min-height:78px;margin-bottom:12px}
+  /* chip para pasar a pantalla completa */
+  #chip-fs{position:fixed;z-index:6;top:calc(10px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);
+    display:none;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;font:inherit;font-size:.82rem;color:#e8f1ff;
+    background:rgba(8,22,48,.82);border:1.5px solid rgba(70,160,255,.7);box-shadow:0 0 16px rgba(47,155,255,.45);cursor:pointer;
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  #chip-fs.ver{display:flex}
+  #chip-fs svg{width:16px;height:16px;stroke:#6cc0ff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+  /* el juego se abre encima de la portada, así se mantiene la pantalla completa */
+  #marco-juego{position:fixed;inset:0;width:100%;height:100%;border:0;background:#000;z-index:50;display:none}
+  #marco-juego.ver{display:block}
+
+  /* celular en horizontal: dos columnas, todo en una pantalla */
+  @media (orientation:landscape) and (max-height:640px){
+    .app{max-width:none;box-shadow:none}
+    .hero{height:100%;background:
+      linear-gradient(90deg, rgba(4,9,18,.1) 0%, rgba(4,9,18,.55) 48%, rgba(4,9,18,.92) 100%),
+      url(fondo.jpg) center 30%/cover no-repeat}
+    main{display:grid;grid-template-columns:1fr 1.05fr;gap:4vw;align-items:center;justify-content:normal;padding:14px 4vw}
+    .logo{width:min(100%,380px,70vh)}
+    .opcion{min-height:74px;margin-bottom:12px}
+    .ico{width:80px;margin:14px 0}.ico svg{width:44px;height:44px}
+    .txt b{font-size:1.05rem}.txt span{font-size:.78rem;margin-top:3px}
+    .sub{font-size:.62rem;letter-spacing:.22em;margin-bottom:0}
+    .pie{margin:6px 0}.pie svg{width:30px;height:30px}.lema{font-size:.9rem}.aviso{display:none}
+    .franja{height:80px}
   }
 </style>
 </head>
 <body>
 <div class="app">
   <div class="hero" role="img" aria-label="Casco minero con lámpara frente a una galería subterránea"></div>
+  <div class="gdg" aria-label="GDG">GDG</div>
   <div class="franja a"></div>
   <div class="franja b"></div>
 
   <main>
+    <div class="izq">
     <svg class="logo" viewBox="0 0 760 330" role="img" aria-label="MINESIM">
       <defs>
         <linearGradient id="plata" x1="0" y1="0" x2="0" y2="1">
@@ -133,6 +163,8 @@
       </text>
     </svg>
     <div class="sub"><span>Simulador interactivo de minería</span></div>
+    </div>
+    <div class="der">
 
     <button class="opcion" data-destino="ar" data-titulo="Realidad aumentada">
       <div class="ico">
@@ -169,8 +201,12 @@
     </div>
     <p class="lema">Aprende, explora y vive la minería</p>
     <p class="aviso">Para la realidad aumentada se necesita permitir el acceso a la cámara.</p>
+    </div>
   </main>
 </div>
+
+<button id="chip-fs" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Pantalla completa</button>
+<iframe id="marco-juego" title="MINESIM" allow="fullscreen; autoplay; accelerometer; gyroscope"></iframe>
 
 <div class="velo" id="velo">
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="ptitulo">
@@ -192,6 +228,55 @@
   // Rutas de cada experiencia dentro del mismo sitio
   var RUTAS = { ar: "ar/index.html", juego: "juego/index.html" };
   var velo = document.getElementById("velo"), destino = null;
+  var marco = document.getElementById("marco-juego"), chip = document.getElementById("chip-fs");
+  var tactil = (window.matchMedia && matchMedia("(pointer:coarse)").matches) || ("ontouchstart" in window);
+  var ios = /iP(hone|ad|od)/.test(navigator.userAgent);
+  var docEl = document.documentElement;
+  var puedeFS = !!(docEl.requestFullscreen || docEl.webkitRequestFullscreen) && !ios;
+
+  function enFS() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+  function pedirFS() {
+    if (!puedeFS || enFS()) return Promise.resolve();
+    try {
+      var rq = docEl.requestFullscreen || docEl.webkitRequestFullscreen;
+      var r = rq.call(docEl, { navigationUI: "hide" });
+      return (r && r.then) ? r.catch(function () {}) : Promise.resolve();
+    } catch (e) { return Promise.resolve(); }
+  }
+  function actualizarChip() { chip.classList.toggle("ver", tactil && puedeFS && !enFS() && !marco.classList.contains("ver")); }
+  document.addEventListener("fullscreenchange", actualizarChip);
+  document.addEventListener("webkitfullscreenchange", actualizarChip);
+  actualizarChip();
+
+  // Cualquier toque o clic en la portada pasa a pantalla completa (el navegador exige un gesto del usuario)
+  if (tactil) {
+    document.addEventListener("click", function () { if (!enFS()) pedirFS(); }, true);
+  }
+  chip.addEventListener("click", function (e) { e.stopPropagation(); pedirFS(); });
+
+  function abrirDestino(url) {
+    pedirFS().then(function () {
+      if (enFS()) {
+        // se queda en la misma página, así la pantalla completa no se pierde
+        marco.src = url;
+        marco.classList.add("ver");
+        velo.classList.remove("abierto");
+        actualizarChip();
+        try { screen.orientation.lock("landscape").catch(function () {}); } catch (e) {}
+      } else {
+        window.location.href = url;
+      }
+    });
+  }
+  function cerrarMarco() {
+    marco.classList.remove("ver");
+    marco.src = "about:blank";
+    try { screen.orientation.unlock(); } catch (e) {}
+    actualizarChip();
+  }
+  window.addEventListener("message", function (e) {
+    if (e.data === "minesim-menu") cerrarMarco();
+  });
 
   document.querySelectorAll("[data-destino]").forEach(function (b) {
     b.addEventListener("click", function () {
@@ -202,7 +287,7 @@
   });
   document.querySelectorAll("[data-modo]").forEach(function (b) {
     b.addEventListener("click", function () {
-      window.location.href = RUTAS[destino] + "?modo=" + b.dataset.modo;
+      abrirDestino(RUTAS[destino] + "?modo=" + b.dataset.modo);
     });
   });
   document.getElementById("cerrar").addEventListener("click", function () { velo.classList.remove("abierto"); });
